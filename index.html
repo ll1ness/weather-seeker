@@ -9,7 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // Immediate check for file:// protocol - redirect to main site
         if (location.protocol === 'file:') {
@@ -55,6 +57,10 @@
                 <button class="nav-item" data-section="compare">
                     <span class="nav-icon material-icons">compare_arrows</span>
                     <span>Сравнение</span>
+                </button>
+                <button class="nav-item" data-section="radar">
+                    <span class="nav-icon material-icons">radar</span>
+                    <span>Радар</span>
                 </button>
                 <button class="nav-item" data-section="info">
                     <span class="nav-icon material-icons">info</span>
@@ -591,6 +597,41 @@
                     <div class="compare-placeholder" id="comparePlaceholder">
                         <span class="material-icons" style="font-size: 4rem; opacity: 0.3;">compare_arrows</span>
                         <p>Введите два города для сравнения погоды</p>
+                    </div>
+                </section>
+
+                <!-- Radar Section -->
+                <section class="section radar-section" id="radarSection">
+                    <h3>🛰️ Радар осадков</h3>
+                    <p class="radar-description">Интерактивная карта осадков в реальном времени. Данные предоставлены <a href="https://www.rainviewer.com" target="_blank">RainViewer</a>.</p>
+                    <div class="radar-controls">
+                        <div class="radar-playback">
+                            <button class="radar-btn active" id="radarPlayBtn" title="Воспроизвести анимацию">
+                                <span class="material-icons">play_arrow</span>
+                            </button>
+                            <button class="radar-btn" id="radarPauseBtn" title="Пауза">
+                                <span class="material-icons">pause</span>
+                            </button>
+                            <span class="radar-timestamp" id="radarTimestamp">--</span>
+                        </div>
+                        <div class="radar-opacity">
+                            <label for="radarOpacitySlider">Прозрачность</label>
+                            <input type="range" id="radarOpacitySlider" min="30" max="100" value="60">
+                        </div>
+                    </div>
+                    <div class="radar-map-container">
+                        <div class="radar-map" id="radarMap"></div>
+                        <div class="radar-loading" id="radarLoading">
+                            <div class="radar-spinner"></div>
+                            <span>Загрузка радарных данных...</span>
+                        </div>
+                    </div>
+                    <div class="radar-legend">
+                        <span class="legend-item"><span class="legend-color" style="background: #00ff00;"></span>Слабый</span>
+                        <span class="legend-item"><span class="legend-color" style="background: #ffff00;"></span>Умеренный</span>
+                        <span class="legend-item"><span class="legend-color" style="background: #ff8800;"></span>Сильный</span>
+                        <span class="legend-item"><span class="legend-color" style="background: #ff0000;"></span>Очень сильный</span>
+                        <span class="legend-item"><span class="legend-color" style="background: #ff00ff;"></span>Экстремальный</span>
                     </div>
                 </section>
             </div>

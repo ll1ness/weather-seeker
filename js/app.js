@@ -5,6 +5,7 @@ import { getHistory, addToHistory, clearHistory, formatTimestamp } from './searc
 import { getFavorites, isFavorite, toggleFavorite, removeFavorite } from './favorites.js';
 import { renderCharts, hideCharts } from './charts.js';
 import { THEMES, getThemePreference, setThemePreference, shouldUseDarkMode, applyTheme, initTheme, listenForSystemTheme } from './theme.js';
+import { initRadar, playRadarAnimation, pauseRadarAnimation, updateRadarPosition, updateRadarTheme, destroyRadar } from './radar.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -52,6 +53,7 @@ const sections = {
     current: document.getElementById('currentSection'),
     forecast: document.getElementById('forecastSection'),
     compare: document.getElementById('compareSection'),
+    radar: document.getElementById('radarSection'),
     info: document.getElementById('infoSection'),
     facts: document.getElementById('factsSection')
 };
@@ -66,6 +68,7 @@ let currentThemePref = initTheme();
 const unsubscribeSystemTheme = listenForSystemTheme((isDark) => {
     applyTheme(isDark);
     updateThemeButtons(getThemePreference());
+    updateRadarTheme(isDark);
 });
 
 // Theme toggle buttons (3 separate buttons at bottom of sidebar)
@@ -81,6 +84,7 @@ if (themeDark) {
         setThemePreference(THEMES.DARK);
         applyTheme(true);
         updateThemeButtons(THEMES.DARK);
+        updateRadarTheme(true);
     });
 }
 if (themeLight) {
@@ -88,6 +92,7 @@ if (themeLight) {
         setThemePreference(THEMES.LIGHT);
         applyTheme(false);
         updateThemeButtons(THEMES.LIGHT);
+        updateRadarTheme(false);
     });
 }
 if (themeAuto) {
@@ -96,6 +101,7 @@ if (themeAuto) {
         const isDark = shouldUseDarkMode(THEMES.AUTO);
         applyTheme(isDark);
         updateThemeButtons(THEMES.AUTO);
+        updateRadarTheme(isDark);
     });
 }
 
@@ -163,6 +169,10 @@ async function loadWeather(lat, lon, cityName = null) {
                 }
             }
         }).catch(err => console.warn('AQI fetch failed:', err));
+        
+        // Initialize radar with current position (lazy init when section is opened)
+        // Store coordinates for radar use
+        window.__radarCoords = { lat, lon };
         
         // Switch to current section
         switchSection('current');
@@ -253,6 +263,17 @@ function switchSection(sectionName) {
             section.classList.toggle('active', key === sectionName);
         }
     });
+    
+    // Initialize radar when switching to radar section
+    if (sectionName === 'radar') {
+        const coords = window.__radarCoords;
+        if (coords) {
+            initRadar(coords.lat, coords.lon);
+        } else {
+            // Default to Moscow if no location selected
+            initRadar(55.7558, 37.6173);
+        }
+    }
     
     if (window.innerWidth <= 768) {
         document.querySelector('.sidebar')?.classList.remove('open');
@@ -840,6 +861,31 @@ document.addEventListener('click', (e) => {
 });
 
 // ===== END COMPARISON EVENT LISTENERS =====
+
+// ===== RADAR EVENT LISTENERS =====
+
+// Play button
+const radarPlayBtn = document.getElementById('radarPlayBtn');
+if (radarPlayBtn) {
+    radarPlayBtn.addEventListener('click', playRadarAnimation);
+}
+
+// Pause button
+const radarPauseBtn = document.getElementById('radarPauseBtn');
+if (radarPauseBtn) {
+    radarPauseBtn.addEventListener('click', pauseRadarAnimation);
+}
+
+// Opacity slider
+const radarOpacitySlider = document.getElementById('radarOpacitySlider');
+if (radarOpacitySlider) {
+    radarOpacitySlider.addEventListener('input', () => {
+        // Will be applied on next frame update
+        // The radar module reads the slider value when showing frames
+    });
+}
+
+// ===== END RADAR EVENT LISTENERS =====
 
 navItems.forEach(item => {
     item.addEventListener('click', () => {
