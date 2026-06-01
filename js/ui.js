@@ -340,19 +340,11 @@ function updateWeatherBackground(condition) {
 }
 
 function updateTheme(condition) {
-    // Force dark appearance: light text on dark background
-    // Always use light theme (remove dark overrides)
-    if (typeof window.applyThemeSettings === 'function') {
-        window.applyThemeSettings(false); // false = light theme (light text on dark)
-    } else {
-        const body = document.body;
-        body.style.removeProperty('--glass-bg');
-        body.style.removeProperty('--glass-border');
-        body.style.removeProperty('--glass-shadow');
-        body.style.removeProperty('--text-primary');
-        body.style.removeProperty('--text-secondary');
-        body.style.removeProperty('--accent');
-        body.style.removeProperty('--liquid-gradient');
+    // Respect user's theme preference instead of forcing light mode
+    if (typeof window.__themeApply === 'function') {
+        // Theme is managed by the theme module in app.js
+        // Just ensure the weather background class is set
+        return;
     }
 }
 
