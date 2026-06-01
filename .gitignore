@@ -1,2 +1,4 @@
 node_modules/
-scripts/
+scripts/dist/  
+.vite/  
+*.local 
