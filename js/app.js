@@ -60,47 +60,49 @@ window.startAnimationLogic = startAnimation;
 
 // Theme system
 let currentThemePref = initTheme();
-updateThemeUI(currentThemePref);
+updateThemeButtons(currentThemePref);
 
 // Listen for system theme changes
 const unsubscribeSystemTheme = listenForSystemTheme((isDark) => {
     applyTheme(isDark);
-    updateThemeUI(getThemePreference());
+    updateThemeButtons(getThemePreference());
 });
 
-// Theme toggle in sidebar
-const themeToggle = document.getElementById('themeToggle');
-if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        // Cycle: dark → light → auto → dark
-        const pref = getThemePreference();
-        let newPref;
-        if (pref === THEMES.DARK) newPref = THEMES.LIGHT;
-        else if (pref === THEMES.LIGHT) newPref = THEMES.AUTO;
-        else newPref = THEMES.DARK;
-        
-        setThemePreference(newPref);
-        const isDark = shouldUseDarkMode(newPref);
+// Theme toggle buttons (3 separate buttons at bottom of sidebar)
+const themeDark = document.getElementById('themeDark');
+const themeLight = document.getElementById('themeLight');
+const themeAuto = document.getElementById('themeAuto');
+
+if (themeDark) {
+    themeDark.addEventListener('click', () => {
+        setThemePreference(THEMES.DARK);
+        applyTheme(true);
+        updateThemeButtons(THEMES.DARK);
+    });
+}
+if (themeLight) {
+    themeLight.addEventListener('click', () => {
+        setThemePreference(THEMES.LIGHT);
+        applyTheme(false);
+        updateThemeButtons(THEMES.LIGHT);
+    });
+}
+if (themeAuto) {
+    themeAuto.addEventListener('click', () => {
+        setThemePreference(THEMES.AUTO);
+        const isDark = shouldUseDarkMode(THEMES.AUTO);
         applyTheme(isDark);
-        updateThemeUI(newPref);
+        updateThemeButtons(THEMES.AUTO);
     });
 }
 
-function updateThemeUI(preference) {
-    const icon = document.getElementById('themeIcon');
-    const label = document.getElementById('themeLabel');
-    if (!icon || !label) return;
-
-    if (preference === THEMES.DARK) {
-        icon.textContent = 'dark_mode';
-        label.textContent = 'Тёмная';
-    } else if (preference === THEMES.LIGHT) {
-        icon.textContent = 'light_mode';
-        label.textContent = 'Светлая';
-    } else {
-        icon.textContent = 'brightness_auto';
-        label.textContent = 'Авто';
-    }
+function updateThemeButtons(preference) {
+    [themeDark, themeLight, themeAuto].forEach(btn => {
+        if (btn) btn.classList.remove('active');
+    });
+    if (preference === THEMES.DARK && themeDark) themeDark.classList.add('active');
+    else if (preference === THEMES.LIGHT && themeLight) themeLight.classList.add('active');
+    else if (themeAuto) themeAuto.classList.add('active');
 }
 
 // DOM Elements for favorites

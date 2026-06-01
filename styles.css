@@ -474,39 +474,43 @@ body.light-bg {
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
 }
 
-/* Theme Toggle in Sidebar */
+/* Theme Buttons at bottom of sidebar */
 .sidebar-theme {
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    padding: 12px 0;
+    border-top: 1px solid var(--glass-border);
+    margin-top: auto;
 }
 
-.theme-toggle {
+.theme-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 8px 12px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border-radius: 12px;
-    cursor: pointer;
+    justify-content: center;
     transition: var(--transition);
-    border: 1px solid transparent;
-    user-select: none;
+    flex: 1;
+    max-width: 60px;
 }
 
-.theme-toggle:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--glass-border);
+.theme-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
-.theme-icon {
+.theme-btn.active {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #fff;
+}
+
+.theme-btn .material-icons {
     font-size: 1.3rem;
-    opacity: 0.8;
-}
-
-.theme-label {
-    font-size: 0.85rem;
-    font-weight: 500;
-    opacity: 0.7;
 }
 
 /* Light Theme Styles */
@@ -652,9 +656,19 @@ body.light-theme .favorite-item:hover {
     border-color: rgba(0, 0, 0, 0.1);
 }
 
-body.light-theme .theme-toggle:hover {
+body.light-theme .theme-btn {
     background: rgba(0, 0, 0, 0.06);
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .theme-btn:hover {
+    background: rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .theme-btn.active {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: var(--text-primary);
 }
 
 body.light-theme .content-wrapper::-webkit-scrollbar-thumb {

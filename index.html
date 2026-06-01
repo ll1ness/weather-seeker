@@ -62,14 +62,6 @@
                 </button>
             </nav>
 
-            <!-- Theme Toggle in Sidebar -->
-            <div class="sidebar-theme">
-                <div class="theme-toggle" id="themeToggle">
-                    <span class="theme-icon material-icons" id="themeIcon">dark_mode</span>
-                    <span class="theme-label" id="themeLabel">Тёмная</span>
-                </div>
-            </div>
-
             <!-- Favorites Section in Sidebar -->
             <div class="sidebar-favorites" id="sidebarFavorites">
                 <div class="favorites-header">
@@ -77,6 +69,19 @@
                 </div>
                 <div class="favorites-list" id="favoritesList"></div>
             </div>
+            <!-- Theme Buttons -->
+            <div class="sidebar-theme">
+                <button class="theme-btn" data-theme="dark" id="themeDark" title="Тёмная тема">
+                    <span class="material-icons">dark_mode</span>
+                </button>
+                <button class="theme-btn" data-theme="light" id="themeLight" title="Светлая тема">
+                    <span class="material-icons">light_mode</span>
+                </button>
+                <button class="theme-btn" data-theme="auto" id="themeAuto" title="Системная тема">
+                    <span class="material-icons">brightness_auto</span>
+                </button>
+            </div>
+
             <div class="sidebar-footer">
                 <p>© 2026 ll1ness.</p>
                 <p class="api-credit">Powered by Open-Meteo</p>
