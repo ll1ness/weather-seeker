@@ -937,3 +937,43 @@ if (menuToggle && sidebar) {
 // Expose theme function globally for UI module
 window.applyThemeSettings = applyTheme;
 window.__themeApply = applyTheme;
+
+// ─── PWA Install Prompt ──────────────────────────────────────
+let deferredPrompt = null;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67+ from automatically showing the prompt
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show the install button
+    if (installBtn) {
+        installBtn.style.display = 'flex';
+    }
+});
+
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        // Show the install prompt
+        deferredPrompt.prompt();
+        const result = await deferredPrompt.userChoice;
+        if (result.outcome === 'accepted') {
+            console.log('[PWA] User accepted install');
+        } else {
+            console.log('[PWA] User dismissed install');
+        }
+        // Reset — can only be used once
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+    });
+}
+
+// Hide install button if already installed (display-mode: standalone)
+window.addEventListener('appinstalled', () => {
+    if (installBtn) {
+        installBtn.style.display = 'none';
+    }
+    deferredPrompt = null;
+    console.log('[PWA] App installed successfully');
+});

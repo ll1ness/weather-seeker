@@ -852,6 +852,37 @@ body.light-theme .menu-toggle {
     opacity: 0.5;
 }
 
+/* Install PWA Button */
+.install-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    background: var(--liquid-gradient);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.install-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.install-btn .material-icons {
+    font-size: 1.2rem;
+}
+
 /* Main Content */
 .main-content {
     flex: 1;
