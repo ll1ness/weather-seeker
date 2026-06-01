@@ -1,4 +1,5 @@
 import { weatherTips } from './config.js';
+import { renderHourlyForecast, clearHourlyForecast } from './hourlyForecast.js';
 
 // Update current weather display
 export function displayCurrentWeather(data, cityName) {
@@ -130,6 +131,13 @@ export function displayCurrentWeather(data, cityName) {
     // Update weather tip
     const tip = weatherTips[weather.condition] || weatherTips.default;
     document.getElementById('weatherTip').textContent = tip;
+
+    // Render hourly forecast
+    if (data.hourly && data.hourly.time) {
+        renderHourlyForecast(data.hourly, 24);
+    } else {
+        clearHourlyForecast();
+    }
 }
 
 export function displayForecast(days, forecastData) {

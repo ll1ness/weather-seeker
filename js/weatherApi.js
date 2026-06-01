@@ -18,7 +18,7 @@ export async function fetchWeatherByCoords(lat, lon) {
 
     try {
         const response = await fetch(
-            `${API_BASE}/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m,cloudcover,visibility,surface_pressure,uv_index&daily=weathercode,temperature_2m_max,temperature_2m_min,windspeed_10m_max,surface_pressure_max,precipitation_sum,sunrise,sunset,uv_index_max,winddirection_10m_dominant&forecast_days=16&timezone=auto`
+            `${API_BASE}/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m,relativehumidity_2m,cloudcover,visibility,surface_pressure,uv_index&daily=weathercode,temperature_2m_max,temperature_2m_min,windspeed_10m_max,surface_pressure_max,precipitation_sum,sunrise,sunset,uv_index_max,winddirection_10m_dominant&forecast_days=16&timezone=auto`
         );
 
         if (!response.ok) {

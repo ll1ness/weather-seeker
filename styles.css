@@ -941,6 +941,158 @@ body.light-bg {
     font-weight: 500;
 }
 
+/* Hourly Forecast Section */
+.hourly-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.hourly-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    opacity: 0.85;
+}
+
+.hourly-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    margin: 0 -4px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hourly-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.hourly-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+}
+
+.hourly-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+.hourly-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.hourly-forecast {
+    display: flex;
+    gap: 10px;
+    padding: 0 4px;
+    min-width: min-content;
+}
+
+.hourly-card {
+    flex: 0 0 90px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+    transition: var(--transition);
+    min-width: 0;
+}
+
+.hourly-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.hourly-card.now {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.hourly-time {
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.8;
+    margin-bottom: 6px;
+    white-space: nowrap;
+}
+
+.hourly-card.now .hourly-time {
+    color: #4ecdc4;
+    opacity: 1;
+}
+
+.hourly-icon {
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.hourly-temp {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+    transition: color 0.3s ease;
+}
+
+.hourly-precip {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    margin-bottom: 2px;
+    white-space: nowrap;
+}
+
+.hourly-wind {
+    font-size: 0.7rem;
+    opacity: 0.6;
+    margin-bottom: 2px;
+}
+
+.hourly-desc {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    .hourly-card {
+        flex: 0 0 80px;
+        padding: 10px 6px;
+    }
+
+    .hourly-icon {
+        font-size: 1.3rem;
+    }
+
+    .hourly-temp {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hourly-card {
+        flex: 0 0 72px;
+        padding: 8px 4px;
+    }
+
+    .hourly-time {
+        font-size: 0.7rem;
+    }
+
+    .hourly-icon {
+        font-size: 1.1rem;
+    }
+
+    .hourly-temp {
+        font-size: 0.9rem;
+    }
+}
+
 /* Compact Info Cards */
 .info-section-compact {
     display: grid;
