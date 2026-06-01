@@ -4,6 +4,7 @@ import { startAnimation } from './animations.js';
 import { getHistory, addToHistory, clearHistory, formatTimestamp } from './searchHistory.js';
 import { getFavorites, isFavorite, toggleFavorite, removeFavorite } from './favorites.js';
 import { renderCharts, hideCharts } from './charts.js';
+import { THEMES, getThemePreference, setThemePreference, shouldUseDarkMode, applyTheme, initTheme, listenForSystemTheme } from './theme.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -56,6 +57,51 @@ const sections = {
 
 // Expose animation function globally for UI module
 window.startAnimationLogic = startAnimation;
+
+// Theme system
+let currentThemePref = initTheme();
+updateThemeUI(currentThemePref);
+
+// Listen for system theme changes
+const unsubscribeSystemTheme = listenForSystemTheme((isDark) => {
+    applyTheme(isDark);
+    updateThemeUI(getThemePreference());
+});
+
+// Theme toggle in sidebar
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        // Cycle: dark → light → auto → dark
+        const pref = getThemePreference();
+        let newPref;
+        if (pref === THEMES.DARK) newPref = THEMES.LIGHT;
+        else if (pref === THEMES.LIGHT) newPref = THEMES.AUTO;
+        else newPref = THEMES.DARK;
+        
+        setThemePreference(newPref);
+        const isDark = shouldUseDarkMode(newPref);
+        applyTheme(isDark);
+        updateThemeUI(newPref);
+    });
+}
+
+function updateThemeUI(preference) {
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    if (!icon || !label) return;
+
+    if (preference === THEMES.DARK) {
+        icon.textContent = 'dark_mode';
+        label.textContent = 'Тёмная';
+    } else if (preference === THEMES.LIGHT) {
+        icon.textContent = 'light_mode';
+        label.textContent = 'Светлая';
+    } else {
+        icon.textContent = 'brightness_auto';
+        label.textContent = 'Авто';
+    }
+}
 
 // DOM Elements for favorites
 const favoriteBtn = document.getElementById('favoriteBtn');
@@ -180,28 +226,7 @@ function switchSection(sectionName) {
     }
 }
 
-// Theme Management - Auto mode only (based on weather)
-function applyTheme(shouldBeDark) {
-    const body = document.body;
-    
-    if (shouldBeDark) {
-        body.style.setProperty('--glass-bg', 'rgba(0, 0, 0, 0.35)');
-        body.style.setProperty('--glass-border', 'rgba(0, 0, 0, 0.25)');
-        body.style.setProperty('--glass-shadow', 'rgba(0, 0, 0, 0.5)');
-        body.style.setProperty('--text-primary', '#1a1a1a');
-        body.style.setProperty('--text-secondary', 'rgba(0, 0, 0, 0.7)');
-        body.style.setProperty('--accent', 'rgba(0, 0, 0, 0.15)');
-        body.style.setProperty('--liquid-gradient', 'linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.03) 100%)');
-    } else {
-        body.style.removeProperty('--glass-bg');
-        body.style.removeProperty('--glass-border');
-        body.style.removeProperty('--glass-shadow');
-        body.style.removeProperty('--text-primary');
-        body.style.removeProperty('--text-secondary');
-        body.style.removeProperty('--accent');
-        body.style.removeProperty('--liquid-gradient');
-    }
-}
+// Theme Management - delegated to theme.js module
 
 // Update forecast city name display
 function updateForecastCity() {
@@ -526,3 +551,4 @@ if (menuToggle && sidebar) {
 
 // Expose theme function globally for UI module
 window.applyThemeSettings = applyTheme;
+window.__themeApply = applyTheme;
