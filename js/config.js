@@ -1,6 +1,7 @@
 // Open-Meteo API Configuration
 export const API_BASE = 'https://api.open-meteo.com/v1';
 export const GEOCODE_BASE = 'https://geocoding-api.open-meteo.com/v1';
+export const AQI_BASE = 'https://air-quality-api.open-meteo.com/v1';
 
 // Weather code mapping (WMO codes)
 // https://open-meteo.com/en/docs

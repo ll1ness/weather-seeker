@@ -132,6 +132,11 @@ export function displayCurrentWeather(data, cityName) {
     const tip = weatherTips[weather.condition] || weatherTips.default;
     document.getElementById('weatherTip').textContent = tip;
 
+    // Display air quality if data is available
+    if (window.__aqiData) {
+        displayAirQuality(window.__aqiData);
+    }
+
     // Render hourly forecast
     if (data.hourly && data.hourly.time) {
         renderHourlyForecast(data.hourly, 24);
@@ -379,6 +384,55 @@ export function showLoading(show) {
     } else {
         weatherContent.style.display = 'block';
     }
+}
+
+/**
+ * Display Air Quality Index data
+ * @param {Object} aqiData - Air quality API response
+ */
+export function displayAirQuality(aqiData) {
+    const aqiEl = document.getElementById('aqiValue');
+    if (!aqiEl) return;
+
+    if (!aqiData || !aqiData.current) {
+        aqiEl.textContent = '--';
+        aqiEl.style.color = '';
+        return;
+    }
+
+    // Prefer European AQI, fall back to US AQI
+    const aqi = aqiData.current.european_aqi || aqiData.current.us_aqi;
+    if (aqi === null || aqi === undefined) {
+        aqiEl.textContent = '--';
+        aqiEl.style.color = '';
+        return;
+    }
+
+    const value = Math.round(aqi);
+    let label, color;
+
+    if (value <= 20) {
+        label = 'Отличное';
+        color = '#4ade80';
+    } else if (value <= 40) {
+        label = 'Хорошее';
+        color = '#22c55e';
+    } else if (value <= 60) {
+        label = 'Умеренное';
+        color = '#eab308';
+    } else if (value <= 80) {
+        label = 'Плохое';
+        color = '#f97316';
+    } else if (value <= 100) {
+        label = 'Очень плохое';
+        color = '#ef4444';
+    } else {
+        label = 'Опасное';
+        color = '#dc2626';
+    }
+
+    aqiEl.textContent = `${value} — ${label}`;
+    aqiEl.style.color = color;
 }
 
 // Modal functionality

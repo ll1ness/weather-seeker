@@ -1,4 +1,4 @@
-import { fetchWeatherByCoords, searchCity } from './weatherApi.js';
+import { fetchWeatherByCoords, searchCity, fetchAirQuality } from './weatherApi.js';
 import { displayCurrentWeather, displayForecast, showLoading } from './ui.js';
 import { startAnimation } from './animations.js';
 import { getHistory, addToHistory, clearHistory, formatTimestamp } from './searchHistory.js';
@@ -134,6 +134,20 @@ async function loadWeather(lat, lon, cityName = null) {
         
         // Update forecast city name
         updateForecastCity();
+        
+        // Fetch air quality data in parallel (non-blocking, doesn't delay UI)
+        fetchAirQuality(lat, lon).then(aqiData => {
+            if (aqiData) {
+                window.__aqiData = aqiData;
+                const aqiEl = document.getElementById('aqiValue');
+                if (aqiEl) {
+                    // Use the displayAirQuality function from ui.js
+                    import('./ui.js').then(({ displayAirQuality }) => {
+                        displayAirQuality(aqiData);
+                    });
+                }
+            }
+        }).catch(err => console.warn('AQI fetch failed:', err));
         
         // Switch to current section
         switchSection('current');

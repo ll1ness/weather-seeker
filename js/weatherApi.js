@@ -1,4 +1,4 @@
-import { API_BASE, GEOCODE_BASE } from './config.js';
+import { API_BASE, GEOCODE_BASE, AQI_BASE } from './config.js';
 
 // Cache for API responses
 const cache = new Map();
@@ -80,6 +80,42 @@ export async function reverseGeocode(lat, lon) {
         return await response.json();
     } catch (error) {
         console.error('Error reverse geocoding:', error);
+        return null;
+    }
+}
+
+export async function fetchAirQuality(lat, lon) {
+    const cacheKey = `aqi-${lat.toFixed(2)}-${lon.toFixed(2)}`;
+    const now = Date.now();
+
+    // Check cache
+    if (cache.has(cacheKey)) {
+        const cached = cache.get(cacheKey);
+        if (now - cached.timestamp < CACHE_DURATION) {
+            return cached.data;
+        }
+    }
+
+    try {
+        const response = await fetch(
+            `${AQI_BASE}/air-quality?latitude=${lat}&longitude=${lon}&current=european_aqi,us_aqi,pm2_5,pm10,nitrogen_dioxide,ozone,sulphur_dioxide`
+        );
+
+        if (!response.ok) {
+            throw new Error(`Air Quality API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Cache the result
+        cache.set(cacheKey, {
+            data,
+            timestamp: now
+        });
+
+        return data;
+    } catch (error) {
+        console.warn('Failed to fetch air quality data:', error);
         return null;
     }
 }
