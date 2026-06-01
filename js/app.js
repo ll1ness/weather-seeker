@@ -51,6 +51,7 @@ const forecastButtons = document.querySelectorAll('.forecast-btn');
 const sections = {
     current: document.getElementById('currentSection'),
     forecast: document.getElementById('forecastSection'),
+    compare: document.getElementById('compareSection'),
     info: document.getElementById('infoSection'),
     facts: document.getElementById('factsSection')
 };
@@ -110,6 +111,20 @@ function updateThemeButtons(preference) {
 // DOM Elements for favorites
 const favoriteBtn = document.getElementById('favoriteBtn');
 const favoritesList = document.getElementById('favoritesList');
+
+// ===== COMPARISON STATE =====
+const compareState = {
+    city1: null, // { lat, lon, name, data }
+    city2: null  // { lat, lon, name, data }
+};
+
+// Comparison DOM elements
+const compareInput1 = document.getElementById('compareCity1');
+const compareInput2 = document.getElementById('compareCity2');
+const compareSuggestions1 = document.getElementById('compareSuggestions1');
+const compareSuggestions2 = document.getElementById('compareSuggestions2');
+const compareResults = document.getElementById('compareResults');
+const comparePlaceholder = document.getElementById('comparePlaceholder');
 
 // Load weather by coordinates
 async function loadWeather(lat, lon, cityName = null) {
@@ -468,6 +483,225 @@ function handleSearchWithCoords(lat, lon, city) {
     loadWeather(lat, lon, city);
 }
 
+// ===== COMPARISON LOGIC =====
+
+// Fetch suggestions for a comparison input
+async function fetchCompareSuggestions(query, inputIndex) {
+    try {
+        const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=8&language=ru&format=json`);
+        const data = await response.json();
+        displayCompareSuggestions(data.results || [], inputIndex);
+    } catch (error) {
+        console.error('Geocoding error:', error);
+        hideCompareSuggestions(inputIndex);
+    }
+}
+
+// Display suggestions for a comparison input
+function displayCompareSuggestions(results, inputIndex) {
+    const dropdown = inputIndex === 1 ? compareSuggestions1 : compareSuggestions2;
+    if (!results.length) {
+        dropdown.classList.remove('active');
+        dropdown.innerHTML = '';
+        return;
+    }
+
+    dropdown.innerHTML = results.map(city => `
+        <div class="suggestion-item" data-lat="${city.latitude}" data-lon="${city.longitude}" data-name="${city.name}${city.admin1 ? ', ' + city.admin1 : ''}${city.country ? ', ' + city.country : ''}">
+            <span class="name">${city.name}</span>
+            <span class="country">${city.country || ''}</span>
+        </div>
+    `).join('');
+
+    dropdown.classList.add('active');
+
+    dropdown.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const input = inputIndex === 1 ? compareInput1 : compareInput2;
+            input.value = item.dataset.name;
+            hideCompareSuggestions(inputIndex);
+            selectCompareCity(parseFloat(item.dataset.lat), parseFloat(item.dataset.lon), item.dataset.name, inputIndex);
+        });
+    });
+}
+
+// Hide suggestions for a comparison input
+function hideCompareSuggestions(inputIndex) {
+    const dropdown = inputIndex === 1 ? compareSuggestions1 : compareSuggestions2;
+    dropdown.classList.remove('active');
+    dropdown.innerHTML = '';
+}
+
+// Select a city for comparison and fetch its weather
+async function selectCompareCity(lat, lon, name, inputIndex) {
+    try {
+        // Show loading state on the input
+        const input = inputIndex === 1 ? compareInput1 : compareInput2;
+        input.style.opacity = '0.6';
+        input.disabled = true;
+
+        const data = await fetchWeatherByCoords(lat, lon);
+
+        if (inputIndex === 1) {
+            compareState.city1 = { lat, lon, name, data };
+        } else {
+            compareState.city2 = { lat, lon, name, data };
+        }
+
+        // If both cities are selected, render comparison
+        if (compareState.city1 && compareState.city2) {
+            displayComparison();
+        }
+    } catch (error) {
+        console.error('Error fetching comparison city:', error);
+        alert('Ошибка загрузки данных для сравнения: ' + error.message);
+    } finally {
+        const input = inputIndex === 1 ? compareInput1 : compareInput2;
+        input.style.opacity = '1';
+        input.disabled = false;
+    }
+}
+
+// Render the comparison view
+function displayComparison() {
+    const c1 = compareState.city1;
+    const c2 = compareState.city2;
+    if (!c1 || !c2) return;
+
+    // Helper to extract current values from weather data
+    function getCurrentValues(data) {
+        const current = data.current_weather;
+        const hourly = data.hourly || {};
+        const timezoneOffset = data.utc_offset_seconds || 0;
+        const cityTime = new Date(Date.now() + timezoneOffset * 1000);
+        const currentHour = cityTime.getUTCHours();
+
+        const humidity = hourly.relativehumidity_2m ? (hourly.relativehumidity_2m[currentHour] ?? '--') : '--';
+        const cloudcover = hourly.cloudcover ? (hourly.cloudcover[currentHour] ?? '--') : '--';
+        const pressureHPa = hourly.surface_pressure ? (hourly.surface_pressure[currentHour] ?? null) : null;
+        const pressure = pressureHPa !== null ? Math.round(pressureHPa * 0.750062) : '--';
+        const uv = hourly.uv_index ? (hourly.uv_index[currentHour] ?? '--') : '--';
+
+        return {
+            temp: Math.round(current.temperature),
+            feels: Math.round(current.temperature),
+            humidity,
+            wind: current.windspeed,
+            pressure,
+            clouds: cloudcover,
+            uv: uv !== '--' ? (uv === 0 ? '0' : uv.toFixed(1)) : '--'
+        };
+    }
+
+    const v1 = getCurrentValues(c1.data);
+    const v2 = getCurrentValues(c2.data);
+
+    // Populate panel 1
+    document.getElementById('compCity1').textContent = c1.name;
+    document.getElementById('compTemp1').textContent = v1.temp + '°C';
+    document.getElementById('compFeels1').textContent = v1.feels + '°C';
+    document.getElementById('compHumidity1').textContent = v1.humidity + '%';
+    document.getElementById('compWind1').textContent = v1.wind + ' км/ч';
+    document.getElementById('compPressure1').textContent = v1.pressure + ' мм';
+    document.getElementById('compClouds1').textContent = v1.clouds + '%';
+    document.getElementById('compUV1').textContent = v1.uv;
+
+    // Populate panel 2
+    document.getElementById('compCity2').textContent = c2.name;
+    document.getElementById('compTemp2').textContent = v2.temp + '°C';
+    document.getElementById('compFeels2').textContent = v2.feels + '°C';
+    document.getElementById('compHumidity2').textContent = v2.humidity + '%';
+    document.getElementById('compWind2').textContent = v2.wind + ' км/ч';
+    document.getElementById('compPressure2').textContent = v2.pressure + ' мм';
+    document.getElementById('compClouds2').textContent = v2.clouds + '%';
+    document.getElementById('compUV2').textContent = v2.uv;
+
+    // Calculate and display differences
+    const diffsContainer = document.getElementById('compareDiffs');
+    const diffItems = [
+        {
+            label: 'Температура',
+            val1: v1.temp,
+            val2: v2.temp,
+            unit: '°C',
+            higherBetter: false
+        },
+        {
+            label: 'Влажность',
+            val1: v1.humidity,
+            val2: v2.humidity,
+            unit: '%',
+            higherBetter: false
+        },
+        {
+            label: 'Ветер',
+            val1: v1.wind,
+            val2: v2.wind,
+            unit: ' км/ч',
+            higherBetter: false
+        },
+        {
+            label: 'Давление',
+            val1: v1.pressure,
+            val2: v2.pressure,
+            unit: ' мм',
+            higherBetter: true
+        },
+        {
+            label: 'Облачность',
+            val1: v1.clouds,
+            val2: v2.clouds,
+            unit: '%',
+            higherBetter: false
+        },
+        {
+            label: 'УФ-индекс',
+            val1: v1.uv,
+            val2: v2.uv,
+            unit: '',
+            higherBetter: false
+        }
+    ];
+
+    diffsContainer.innerHTML = diffItems.map(item => {
+        const val1 = parseFloat(item.val1);
+        const val2 = parseFloat(item.val2);
+        if (isNaN(val1) || isNaN(val2)) {
+            return `
+                <div class="compare-diff-item">
+                    <span class="compare-diff-label">${item.label}</span>
+                    <span class="compare-diff-value neutral">--</span>
+                </div>
+            `;
+        }
+
+        let diffClass, diffText;
+        if (val1 > val2) {
+            diffClass = item.higherBetter ? 'positive' : 'negative';
+            diffText = `${c1.name} выше на ${(val1 - val2).toFixed(1)}${item.unit}`;
+        } else if (val2 > val1) {
+            diffClass = item.higherBetter ? 'positive' : 'negative';
+            diffText = `${c2.name} выше на ${(val2 - val1).toFixed(1)}${item.unit}`;
+        } else {
+            diffClass = 'neutral';
+            diffText = 'Одинаково';
+        }
+
+        return `
+            <div class="compare-diff-item">
+                <span class="compare-diff-label">${item.label}</span>
+                <span class="compare-diff-value ${diffClass}">${diffText}</span>
+            </div>
+        `;
+    }).join('');
+
+    // Show results, hide placeholder
+    compareResults.style.display = 'block';
+    comparePlaceholder.style.display = 'none';
+}
+
+// ===== END COMPARISON LOGIC =====
+
 // Show search history in the suggestions dropdown
 function showSearchHistory() {
     const history = getHistory();
@@ -527,6 +761,85 @@ document.addEventListener('click', (e) => {
 });
 locationBtn.addEventListener('click', useCurrentLocation);
 
+// ===== COMPARISON EVENT LISTENERS =====
+
+// Debounced autocomplete for comparison input 1
+let compareDebounce1;
+if (compareInput1) {
+    compareInput1.addEventListener('input', () => {
+        clearTimeout(compareDebounce1);
+        const query = compareInput1.value.trim();
+        if (query.length < 2) {
+            hideCompareSuggestions(1);
+            return;
+        }
+        compareDebounce1 = setTimeout(fetchCompareSuggestions, 300, query, 1);
+    });
+
+    compareInput1.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            hideCompareSuggestions(1);
+            const query = compareInput1.value.trim();
+            if (query.length > 0) {
+                searchCity(query).then(result => {
+                    const name = result.name + (result.country ? ', ' + result.country : '');
+                    compareInput1.value = name;
+                    hideCompareSuggestions(1);
+                    selectCompareCity(result.latitude, result.longitude, name, 1);
+                }).catch(err => {
+                    console.error('Compare search error:', err);
+                    alert('Город не найден: ' + err.message);
+                });
+            }
+        }
+    });
+}
+
+// Debounced autocomplete for comparison input 2
+let compareDebounce2;
+if (compareInput2) {
+    compareInput2.addEventListener('input', () => {
+        clearTimeout(compareDebounce2);
+        const query = compareInput2.value.trim();
+        if (query.length < 2) {
+            hideCompareSuggestions(2);
+            return;
+        }
+        compareDebounce2 = setTimeout(fetchCompareSuggestions, 300, query, 2);
+    });
+
+    compareInput2.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            hideCompareSuggestions(2);
+            const query = compareInput2.value.trim();
+            if (query.length > 0) {
+                searchCity(query).then(result => {
+                    const name = result.name + (result.country ? ', ' + result.country : '');
+                    compareInput2.value = name;
+                    hideCompareSuggestions(2);
+                    selectCompareCity(result.latitude, result.longitude, name, 2);
+                }).catch(err => {
+                    console.error('Compare search error:', err);
+                    alert('Город не найден: ' + err.message);
+                });
+            }
+        }
+    });
+}
+
+// Close comparison suggestions when clicking outside
+document.addEventListener('click', (e) => {
+    const isInput1 = compareInput1 && compareInput1.contains(e.target);
+    const isInput2 = compareInput2 && compareInput2.contains(e.target);
+    const isDropdown1 = compareSuggestions1 && compareSuggestions1.contains(e.target);
+    const isDropdown2 = compareSuggestions2 && compareSuggestions2.contains(e.target);
+    if (!isInput1 && !isInput2 && !isDropdown1 && !isDropdown2) {
+        hideCompareSuggestions(1);
+        hideCompareSuggestions(2);
+    }
+});
+
+// ===== END COMPARISON EVENT LISTENERS =====
 
 navItems.forEach(item => {
     item.addEventListener('click', () => {

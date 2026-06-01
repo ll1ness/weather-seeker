@@ -2089,6 +2089,304 @@ body.light-theme .skeleton-block::after {
     opacity: 0.85;
 }
 
+/* Comparison Section */
+.compare-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 6px 25px var(--glass-shadow);
+    padding: 28px;
+    margin-bottom: 25px;
+}
+
+.compare-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--liquid-gradient);
+    opacity: 0.3;
+    z-index: -1;
+    border-radius: 20px;
+}
+
+.compare-section h3 {
+    font-size: 1.4rem;
+    margin-bottom: 22px;
+    font-weight: 600;
+}
+
+.compare-controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.compare-city-select {
+    flex: 1;
+    min-width: 200px;
+}
+
+.compare-city-select label {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.compare-search {
+    position: relative;
+}
+
+.compare-search input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    outline: none;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.compare-search input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.compare-search input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.compare-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #1a1a1a;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.compare-suggestions.active {
+    display: block;
+}
+
+.compare-suggestions .suggestion-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--glass-border);
+    font-size: 0.85rem;
+}
+
+.compare-suggestions .suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.compare-suggestions .suggestion-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.compare-vs {
+    font-size: 1.2rem;
+    font-weight: 700;
+    opacity: 0.4;
+    padding-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.compare-results {
+    animation: fadeIn 0.4s ease-out;
+}
+
+.compare-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.compare-panel {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 20px;
+    transition: var(--transition);
+}
+
+.compare-panel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.compare-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.compare-city-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.compare-temp {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.compare-panel-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.compare-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.compare-detail-label {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    font-weight: 500;
+}
+
+.compare-detail-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.compare-diffs {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 18px;
+}
+
+.compare-diffs h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    opacity: 0.8;
+}
+
+.compare-diff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.compare-diff-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.compare-diff-label {
+    opacity: 0.7;
+}
+
+.compare-diff-value {
+    font-weight: 600;
+}
+
+.compare-diff-value.positive {
+    color: #4ade80;
+}
+
+.compare-diff-value.negative {
+    color: #ef4444;
+}
+
+.compare-diff-value.neutral {
+    color: var(--text-secondary);
+}
+
+.compare-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    gap: 16px;
+}
+
+.compare-placeholder p {
+    font-size: 1.1rem;
+    opacity: 0.5;
+}
+
+/* Light theme overrides for comparison section */
+body.light-theme .compare-section {
+    background: var(--glass-bg);
+}
+
+body.light-theme .compare-panel {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .compare-panel:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .compare-diffs {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .compare-diff-item {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .compare-search input {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-primary);
+}
+
+body.light-theme .compare-search input:focus {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .compare-suggestions {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .compare-suggestions .suggestion-item:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     :root {

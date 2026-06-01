@@ -52,6 +52,10 @@
                     <span class="nav-icon material-icons">calendar_month</span>
                     <span>Прогноз</span>
                 </button>
+                <button class="nav-item" data-section="compare">
+                    <span class="nav-icon material-icons">compare_arrows</span>
+                    <span>Сравнение</span>
+                </button>
                 <button class="nav-item" data-section="info">
                     <span class="nav-icon material-icons">info</span>
                     <span>Инфо</span>
@@ -489,6 +493,104 @@
                             <span class="fact-icon material-icons">ac_unit</span>
                             <p>Самый толстый снежный покров: 4,5 метра в Калифорнии (1911)</p>
                         </div>
+                    </div>
+                </section>
+
+                <!-- Comparison Section -->
+                <section class="section compare-section" id="compareSection">
+                    <h3>🌍 Сравнение городов</h3>
+                    <div class="compare-controls">
+                        <div class="compare-city-select">
+                            <label for="compareCity1">Город 1</label>
+                            <div class="compare-search">
+                                <input type="text" id="compareCity1" placeholder="Введите город..." autocomplete="off">
+                                <div class="compare-suggestions" id="compareSuggestions1"></div>
+                            </div>
+                        </div>
+                        <div class="compare-vs">VS</div>
+                        <div class="compare-city-select">
+                            <label for="compareCity2">Город 2</label>
+                            <div class="compare-search">
+                                <input type="text" id="compareCity2" placeholder="Введите город..." autocomplete="off">
+                                <div class="compare-suggestions" id="compareSuggestions2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="compare-results" id="compareResults" style="display: none;">
+                        <div class="compare-panels">
+                            <div class="compare-panel" id="comparePanel1">
+                                <div class="compare-panel-header">
+                                    <h4 class="compare-city-name" id="compCity1">--</h4>
+                                    <span class="compare-temp" id="compTemp1">--°C</span>
+                                </div>
+                                <div class="compare-panel-details">
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Ощущается</span>
+                                        <span class="compare-detail-value" id="compFeels1">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Влажность</span>
+                                        <span class="compare-detail-value" id="compHumidity1">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Ветер</span>
+                                        <span class="compare-detail-value" id="compWind1">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Давление</span>
+                                        <span class="compare-detail-value" id="compPressure1">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Облачность</span>
+                                        <span class="compare-detail-value" id="compClouds1">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">УФ-индекс</span>
+                                        <span class="compare-detail-value" id="compUV1">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="compare-panel" id="comparePanel2">
+                                <div class="compare-panel-header">
+                                    <h4 class="compare-city-name" id="compCity2">--</h4>
+                                    <span class="compare-temp" id="compTemp2">--°C</span>
+                                </div>
+                                <div class="compare-panel-details">
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Ощущается</span>
+                                        <span class="compare-detail-value" id="compFeels2">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Влажность</span>
+                                        <span class="compare-detail-value" id="compHumidity2">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Ветер</span>
+                                        <span class="compare-detail-value" id="compWind2">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Давление</span>
+                                        <span class="compare-detail-value" id="compPressure2">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">Облачность</span>
+                                        <span class="compare-detail-value" id="compClouds2">--</span>
+                                    </div>
+                                    <div class="compare-detail">
+                                        <span class="compare-detail-label">УФ-индекс</span>
+                                        <span class="compare-detail-value" id="compUV2">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="compare-diffs">
+                            <h4>Разница</h4>
+                            <div class="compare-diff-grid" id="compareDiffs"></div>
+                        </div>
+                    </div>
+                    <div class="compare-placeholder" id="comparePlaceholder">
+                        <span class="material-icons" style="font-size: 4rem; opacity: 0.3;">compare_arrows</span>
+                        <p>Введите два города для сравнения погоды</p>
                     </div>
                 </section>
             </div>
