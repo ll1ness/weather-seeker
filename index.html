@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Seeker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+        // Immediate check for file:// protocol - redirect to main site
+        if (location.protocol === 'file:') {
+            window.location.href = 'https://ll1ness.zapto.org/';
+        }
+    </script>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="weather-background" id="weatherBackground">
+        <div class="mountains" id="mountains">
+            <svg viewBox="0 0 1440 400" preserveAspectRatio="none" class="mountain-svg">
+                <defs>
+                    <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:var(--mountain-color-1);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:var(--mountain-color-2);stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path d="M0,400 L0,250 L200,150 L400,280 L600,180 L800,300 L1000,200 L1200,280 L1440,220 L1440,400 Z" fill="url(#mountainGradient)"></path>
+                <path d="M0,400 L0,300 L300,220 L500,320 L700,250 L900,330 L1100,270 L1300,320 L1440,290 L1440,400 Z" fill="var(--mountain-color-3)" opacity="0.7"></path>
+            </svg>
+        </div>
+        <div class="animation-container" id="animationContainer"></div>
+    </div>
+
+    <!-- Fixed Layout Container -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>WS</h2>
+                <span>Weather Seeker</span>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-item active" data-section="current">
+                    <span class="nav-icon material-icons">thermostat</span>
+                    <span>Текущая</span>
+                </button>
+                <button class="nav-item" data-section="forecast">
+                    <span class="nav-icon material-icons">calendar_month</span>
+                    <span>Прогноз</span>
+                </button>
+                <button class="nav-item" data-section="info">
+                    <span class="nav-icon material-icons">info</span>
+                    <span>Инфо</span>
+                </button>
+                <button class="nav-item" data-section="facts">
+                    <span class="nav-icon material-icons">auto_stories</span>
+                    <span>Факты</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <p>© 2026 ll1ness.</p>
+                <p class="api-credit">Powered by Open-Meteo</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Mobile Menu Toggle -->
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            
+            <!-- Header -->
+            <header class="header">
+                <div class="search-container">
+                    <input type="text" id="cityInput" placeholder="Введите город..." autocomplete="off" />
+                    <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
+                    <button id="searchBtn">Найти</button>
+                    <button id="locationBtn" title="Определить местоположение"><span class="material-icons">my_location</span></button>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="content-wrapper">
+                <!-- Current Weather Section -->
+                <section class="section current-section" id="currentSection">
+                    <div class="loading" id="loading">Загрузка...</div>
+                    <div class="weather-content" id="weatherContent" style="display: none;">
+                        <div class="weather-main">
+                            <div class="city-info">
+                                <h2 id="cityName">--</h2>
+                                <p id="dateTime">--</p>
+                            </div>
+                            <div class="temperature-display">
+                                <span class="temp" id="temperature">--</span>
+                                <span class="unit">°C</span>
+                            </div>
+                        </div>
+                        <div class="weather-details">
+                            <div class="detail-item">
+                                <span class="icon material-icons">thermostat</span>
+                                <div>
+                                    <p class="label">Ощущается как</p>
+                                    <p class="value" id="feelsLike">--°C</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon material-icons">water_drop</span>
+                                <div>
+                                    <p class="label">Влажность</p>
+                                    <p class="value" id="humidity">--%</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon material-icons">air</span>
+                                <div>
+                                    <p class="label">Ветер</p>
+                                    <p class="value" id="windSpeed">-- км/ч</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon material-icons">explore</span>
+                                <div>
+                                    <p class="label">Направление</p>
+                                    <p class="value" id="windDirection">-- <span class="wind-arrow">↑</span></p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon material-icons">visibility</span>
+                                <div>
+                                    <p class="label">Видимость</p>
+                                    <p class="value" id="visibility">-- км</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon material-icons">speed</span>
+                                <div>
+                                    <p class="label">Давление</p>
+                                    <p class="value" id="pressure">-- мм рт.ст.</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon material-icons">cloud</span>
+                                <div>
+                                    <p class="label">Облачность</p>
+                                    <p class="value" id="clouds">--%</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon material-icons">wb_sunny</span>
+                                <div>
+                                    <p class="label">УФ-индекс</p>
+                                    <p class="value" id="uvIndex">--</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weather-description">
+                            <div class="weather-icon material-icons" id="weatherIcon">--</div>
+                            <p id="weatherDesc">--</p>
+                        </div>
+                        <!-- Additional Info Cards -->
+                        <div class="info-section-compact">
+                            <div class="mini-card">
+                                <span class="mini-icon material-icons">lightbulb</span>
+                                <div>
+                                    <p class="mini-label">Совет</p>
+                                    <p class="mini-value" id="weatherTip">--</p>
+                                </div>
+                            </div>
+                            <div class="mini-card">
+                                <span class="mini-icon material-icons">access_time</span>
+                                <div>
+                                    <p class="mini-label">Время</p>
+                                    <p class="mini-value" id="localTime">--</p>
+                                </div>
+                            </div>
+                            <div class="mini-card">
+                                <span class="mini-icon material-icons">wb_twilight</span>
+                                <div>
+                                    <p class="mini-label">Восход</p>
+                                    <p class="mini-value" id="sunrise">--</p>
+                                </div>
+                            </div>
+                            <div class="mini-card">
+                                <span class="mini-icon material-icons">wb_twilight</span>
+                                <div>
+                                    <p class="mini-label">Закат</p>
+                                    <p class="mini-value" id="sunset">--</p>
+                                </div>
+                            </div>
+                            <div class="mini-card">
+                                <span class="mini-icon material-icons">location_on</span>
+                                <div>
+                                    <p class="mini-label">Координаты</p>
+                                    <p class="mini-value" id="coordinates">--</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Forecast Section -->
+                <section class="section forecast-section" id="forecastSection">
+                    <div class="section-header">
+                        <h3>Прогноз погоды</h3>
+                        <p class="forecast-city" id="forecastCity">--</p>
+                        <div class="forecast-buttons">
+                            <button class="forecast-btn active" data-days="5">5</button>
+                            <button class="forecast-btn" data-days="7">7</button>
+                            <button class="forecast-btn" data-days="10">10</button>
+                            <button class="forecast-btn" data-days="15">15</button>
+                        </div>
+                        <p class="forecast-note">Макс. 16 дней (Open-Meteo)</p>
+                    </div>
+                    <div class="loading" id="forecastLoading" style="display: none;">Загрузка прогноза...</div>
+                    <div class="forecast-container" id="forecastContainer"></div>
+                </section>
+
+                <!-- Info Section -->
+                <section class="section info-section" id="infoSection">
+                    <h3>О проекте</h3>
+                    <div class="about-content">
+                        <div class="about-section">
+                            <h4>📋 Описание</h4>
+                            <p><strong>Weather Seeker</strong> — это современный веб-сервис для получения точной и актуальной информации о погоде в любом регионе мира. Приложение сочетает в себе элегантный дизайн в стиле Liquid Glass (жидкое стекло) с мощными функциями для работы с погодными данными.</p>
+                        </div>
+
+                        <div class="about-section">
+                            <h4>✨ Основные возможности</h4>
+                            <ul class="features-list">
+                                <li><span class="material-icons">location_searching</span> Автоматическое определение местоположения через браузер</li>
+                                <li><span class="material-icons">search</span> Поиск городов по названию (русский и английский языки)</li>
+                                <li><span class="material-icons">cloud</span> Детальная текущая погода: температура, ветер, влажность, давление, видимость, облачность</li>
+                                <li><span class="material-icons">calendar_month</span> Прогноз погоды на 5, 7, 10, 15 дней (до 16 дней через Open-Meteo)</li>
+                                <li><span class="material-icons">animation</span> Динамический фон с анимациями, соответствующими погодным условиям (дождь, снег, гроза, туман)</li>
+                                <li><span class="material-icons">terrain</span> Анимированный горный пейзаж, меняющий цвет в зависимости от погоды</li>
+                                <li><span class="material-icons">cached</span> Кэширование данных на 5 минут для быстрой загрузки</li>
+                                <li><span class="material-icons">lightbulb</span> Полезные советы по погоде для каждого дня</li>
+                                <li><span class="material-icons">auto_stories</span> Раздел интересных фактов о погоде с автоматическим обновлением</li>
+                                <li><span class="material-icons">language</span> Русскоязычный интерфейс</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-section">
+                            <h4>🛠️ Технологический стек</h4>
+                            <div class="tech-grid">
+                                <div class="tech-item">
+                                    <span class="material-icons">html</span>
+                                    <span>HTML5</span>
+                                </div>
+                                <div class="tech-item">
+                                    <span class="material-icons">css</span>
+                                    <span>CSS3 (Glassmorphism, Grid, Flexbox, CSS Variables)</span>
+                                </div>
+                                <div class="tech-item">
+                                    <span class="material-icons">code</span>
+                                    <span>JavaScript ES6+ (Modules, Async/Await, Fetch API)</span>
+                                </div>
+                                <div class="tech-item">
+                                    <span class="material-icons">cloud</span>
+                                    <span>Open-Meteo API (бесплатный, без ключа)</span>
+                                </div>
+                                <div class="tech-item">
+                                    <span class="material-icons">fact_check</span>
+                                    <span>Useless Facts API (для динамических фактов)</span>
+                                </div>
+                                <div class="tech-item">
+                                    <span class="material-icons">font_download</span>
+                                    <span>Google Material Icons</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h4>🎨 Дизайн</h4>
+                            <p>Интерфейс выполнен в стиле <strong>Liquid Glass</strong> — современной вариации Glassmorphism с чёрно-белой цветовой палитрой. Эффект "жидкого стекла" создаётся с помощью:</p>
+                            <ul>
+                                <li>Фоновых размытий (backdrop-filter: blur)</li>
+                                <li>Полупрозрачных слоёв (rgba)</li>
+                                <li>Тонких границ и теней</li>
+                                <li>Плавных анимаций</li>
+                            </ul>
+                            <p>Горный фон в нижней части экрана динамически меняет цветовую гамму в зависимости от текущей погоды, создавая атмосферное впечатление.</p>
+                        </div>
+
+                        <div class="about-section">
+                            <h4>📊 Погодные параметры</h4>
+                            <p>Приложение отображает следующие данные:</p>
+                            <ul>
+                                <li>Температура (°C) и ощущаемая температура</li>
+                                <li>Скорость ветра (км/ч)</li>
+                                <li>Влажность воздуха (%)</li>
+                                <li>Давление (мм рт.ст.)</li>
+                                <li>Видимость (км)</li>
+                                <li>Облачность (%)</li>
+                                <li>Координаты и локальное время</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-section">
+                            <h4>⚡ Производительность</h4>
+                            <ul>
+                                <li>Кэширование API-ответов на 5 минут</li>
+                                <li>Модульная архитектура JavaScript</li>
+                                <li>Оптимизированные CSS-анимации</li>
+                                <li>Адаптивный дизайн для всех устройств</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-section developer">
+                            <h4>👨‍💻 Разработчик</h4>
+                            <div class="developer-card">
+                                <div class="developer-info">
+                                    <h5>ЛИНЕСС</h5>
+                                    <p class="developer-title">Разработчик цифровых проектов</p>
+                                    <p class="developer-desc">Создаём современные веб-приложения с акцентом на пользовательский опыт, производительность и эстетику. Специализируемся на чистых технологиях без излишних зависимостей.</p>
+                                    <div class="developer-tags">
+                                        <span class="tag">Web Development</span>
+                                        <span class="tag">UI/UX</span>
+                                        <span class="tag">JavaScript</span>
+                                        <span class="tag">Python</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-section credits">
+                            <h4>📢 Благодарности</h4>
+                            <ul>
+                                <li>Данные о погоде: <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (бесплатный API, открытые данные)</li>
+                                <li>Динамические факты: <a href="https://uselessfacts.jsph.pl" target="_blank">Useless Facts API</a></li>
+                                <li>Иконки: <a href="https://fonts.google.com/icons" target="_blank">Google Material Icons</a></li>
+                                <li>Шрифты: <a href="https://fonts.google.com" target="_blank">Google Fonts (Poppins)</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="about-section version">
+                            <h4>📦 Версия</h4>
+                            <p>Weather Seeker v1.01.2 | 2026</p>
+                            <p class="license">Лицензия: MIT / Open Source</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Facts Section -->
+                <section class="section facts-section" id="factsSection">
+                    <h3>Интересные факты о погоде</h3>
+                    <div class="facts-grid">
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">thermostat</span>
+                            <p>Самая высокая температура: 56.7°C в Долине Смерти, США (1913)</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">ac_unit</span>
+                            <p>Самая низкая температура: -89.2°C на станции Восток, Антарктида (1983)</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">water_drop</span>
+                            <p>Самый большой годовой уровень осадков: 26 470 мм в Колумбии</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">air</span>
+                            <p>Самая высокая скорость ветра: 113 м/с на горе Кэмп-Дэвид, США</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">bolt</span>
+                            <p>Самая продолжительная гроза длилась 3 часа 30 минут в США</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">waves</span>
+                            <p>Самый высокий приливный диапазон: 16 м в заливе Фанди, Канада</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">thermostat</span>
+                            <p>Самая большая разница температур за 24 часа: 56°C в США (1916)</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">water_drop</span>
+                            <p>Самый сильный ливень: 401 мм за 24 часа в Индии (1995)</p>
+                        </div>
+                        <div class="fact-card">
+                            <span class="fact-icon material-icons">ac_unit</span>
+                            <p>Самый толстый снежный покров: 4,5 метра в Калифорнии (1911)</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for forecast day details -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose"><span class="material-icons">close</span></button>
+            <div class="modal-header">
+                <div class="modal-date" id="modalDate"></div>
+                <div class="modal-icon" id="modalIcon"></div>
+            </div>
+            <div class="modal-temp" id="modalTemp"></div>
+            <div class="modal-description" id="modalDesc"></div>
+            <div class="modal-details" id="modalDetails"></div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
