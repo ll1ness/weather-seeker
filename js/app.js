@@ -2,6 +2,7 @@ import { fetchWeatherByCoords, searchCity } from './weatherApi.js';
 import { displayCurrentWeather, displayForecast, showLoading } from './ui.js';
 import { startAnimation } from './animations.js';
 import { getHistory, addToHistory, clearHistory, formatTimestamp } from './searchHistory.js';
+import { getFavorites, isFavorite, toggleFavorite, removeFavorite } from './favorites.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -55,6 +56,10 @@ const sections = {
 // Expose animation function globally for UI module
 window.startAnimationLogic = startAnimation;
 
+// DOM Elements for favorites
+const favoriteBtn = document.getElementById('favoriteBtn');
+const favoritesList = document.getElementById('favoritesList');
+
 // Load weather by coordinates
 async function loadWeather(lat, lon, cityName = null) {
     try {
@@ -69,6 +74,7 @@ async function loadWeather(lat, lon, cityName = null) {
         }
         
         displayCurrentWeather(data, currentCity);
+        updateFavoriteButton();
         displayForecast(5, data);
         
         // Update forecast city name
@@ -247,6 +253,85 @@ async function loadDynamicFacts() {
     }
 }
 
+// ===== FAVORITES LOGIC =====
+
+// Update favorite button state
+function updateFavoriteButton() {
+    if (!favoriteBtn) return;
+    const isFav = isFavorite(currentLat, currentLon);
+    const icon = favoriteBtn.querySelector('.material-icons');
+    if (icon) {
+        icon.textContent = isFav ? 'star' : 'star_border';
+    }
+    favoriteBtn.classList.toggle('active', isFav);
+    favoriteBtn.title = isFav ? 'Удалить из избранного' : 'Добавить в избранное';
+}
+
+// Toggle favorite on button click
+if (favoriteBtn) {
+    favoriteBtn.addEventListener('click', () => {
+        if (currentLat == null || currentLon == null) return;
+        const cityName = document.getElementById('cityName')?.textContent || currentCity;
+        toggleFavorite(cityName, currentLat, currentLon);
+        updateFavoriteButton();
+        renderFavoritesList();
+    });
+}
+
+// Render favorites list in sidebar
+function renderFavoritesList() {
+    if (!favoritesList) return;
+    const favorites = getFavorites();
+
+    if (favorites.length === 0) {
+        favoritesList.innerHTML = '<div class="favorites-empty">Нет избранных городов</div>';
+        return;
+    }
+
+    favoritesList.innerHTML = favorites.map((item, index) => `
+        <div class="favorite-item" data-lat="${item.lat}" data-lon="${item.lon}" data-name="${item.name}">
+            <span class="favorite-item-icon material-icons">location_on</span>
+            <span class="favorite-item-name">${item.name}</span>
+            <button class="favorite-item-remove" data-index="${index}" title="Удалить">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    `).join('');
+
+    // Click on favorite item → load weather
+    favoritesList.querySelectorAll('.favorite-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            // Don't trigger if clicking remove button
+            if (e.target.closest('.favorite-item-remove')) return;
+            const lat = parseFloat(item.dataset.lat);
+            const lon = parseFloat(item.dataset.lon);
+            const name = item.dataset.name;
+            cityInput.value = name;
+            handleSearchWithCoords(lat, lon, name);
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                sidebar?.classList.remove('open');
+            }
+        });
+    });
+
+    // Remove button
+    favoritesList.querySelectorAll('.favorite-item-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
+            const favorites = getFavorites();
+            if (favorites[index]) {
+                removeFavorite(favorites[index].lat, favorites[index].lon);
+                renderFavoritesList();
+                updateFavoriteButton();
+            }
+        });
+    });
+}
+
+// ===== END FAVORITES LOGIC =====
+
 // Periodically update facts (every 30 seconds)
 let factsInterval;
 function startFactsUpdater() {
@@ -416,6 +501,7 @@ forecastButtons.forEach(btn => {
 // (DOM is already ready since script is at end of body)
 switchSection('current');
 loadAllFacts();
+renderFavoritesList();
 setTimeout(useCurrentLocation, 500);
 startFactsUpdater();
 

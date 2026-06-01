@@ -418,7 +418,7 @@ body.light-bg {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    flex: 1;
+    flex: 0 1 auto;
 }
 
 .nav-item {
@@ -472,6 +472,146 @@ body.light-bg {
 .nav-icon {
     font-size: 1.4rem;
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* Sidebar Favorites */
+.sidebar-favorites {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--glass-border);
+    flex-shrink: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.sidebar-favorites::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-favorites::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+.favorites-header {
+    margin-bottom: 10px;
+}
+
+.favorites-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.favorites-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.favorites-empty {
+    font-size: 0.8rem;
+    opacity: 0.4;
+    padding: 8px 4px;
+    text-align: center;
+}
+
+.favorite-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+.favorite-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--glass-border);
+}
+
+.favorite-item-icon {
+    font-size: 1rem;
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+.favorite-item-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.favorite-item-remove {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+    width: 24px;
+    height: 24px;
+}
+
+.favorite-item-remove .material-icons {
+    font-size: 1rem;
+}
+
+.favorite-item:hover .favorite-item-remove {
+    opacity: 0.6;
+}
+
+.favorite-item-remove:hover {
+    opacity: 1 !important;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Favorite Button (star next to city name) */
+.favorite-btn {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    vertical-align: middle;
+    margin-left: 8px;
+    opacity: 0.5;
+}
+
+.favorite-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.favorite-btn.active {
+    opacity: 1;
+    color: #ffd700;
+}
+
+.favorite-btn.active .material-icons {
+    color: #ffd700;
+}
+
+.favorite-btn .material-icons {
+    font-size: 1.6rem;
+    transition: var(--transition);
 }
 
 .sidebar-footer {

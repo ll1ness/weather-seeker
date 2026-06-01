@@ -60,6 +60,14 @@
                     <span>Факты</span>
                 </button>
             </nav>
+
+            <!-- Favorites Section in Sidebar -->
+            <div class="sidebar-favorites" id="sidebarFavorites">
+                <div class="favorites-header">
+                    <span class="favorites-title">⭐ Избранное</span>
+                </div>
+                <div class="favorites-list" id="favoritesList"></div>
+            </div>
             <div class="sidebar-footer">
                 <p>© 2026 ll1ness.</p>
                 <p class="api-credit">Powered by Open-Meteo</p>
@@ -90,6 +98,9 @@
                         <div class="weather-main">
                             <div class="city-info">
                                 <h2 id="cityName">--</h2>
+                                <button class="favorite-btn" id="favoriteBtn" title="Добавить в избранное">
+                                    <span class="material-icons">star_border</span>
+                                </button>
                                 <p id="dateTime">--</p>
                             </div>
                             <div class="temperature-display">
