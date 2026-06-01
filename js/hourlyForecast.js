@@ -1,13 +1,42 @@
 // Hourly Forecast Module
 // Displays hourly weather forecast as a horizontal scrollable carousel
 
-import { weatherCodes } from './config.js';
-
 /**
- * Get weather info by WMO code (local copy to avoid circular deps)
+ * Weather codes with emoji icons (matching ui.js display style)
  */
+const hourlyWeatherCodes = {
+    0: { description: 'ясно', icon: '☀️' },
+    1: { description: 'преимущественно ясно', icon: '⛅' },
+    2: { description: 'переменная облачность', icon: '⛅' },
+    3: { description: 'пасмурно', icon: '☁️' },
+    45: { description: 'туман', icon: '🌫️' },
+    48: { description: 'инейный туман', icon: '🌫️' },
+    51: { description: 'морось слабая', icon: '🌦️' },
+    53: { description: 'морось умеренная', icon: '🌦️' },
+    55: { description: 'морось сильная', icon: '🌧️' },
+    56: { description: 'замерзающая морось', icon: '🌧️' },
+    57: { description: 'сильная замерзающая морось', icon: '❄️' },
+    61: { description: 'дождь слабый', icon: '🌦️' },
+    63: { description: 'дождь умеренный', icon: '🌧️' },
+    65: { description: 'дождь сильный', icon: '🌧️' },
+    66: { description: 'замерзающий дождь', icon: '❄️' },
+    67: { description: 'сильный замерзающий дождь', icon: '❄️' },
+    71: { description: 'снег слабый', icon: '❄️' },
+    73: { description: 'снег умеренный', icon: '❄️' },
+    75: { description: 'снег сильный', icon: '❄️' },
+    77: { description: 'снежные зерна', icon: '❄️' },
+    80: { description: 'ливни слабые', icon: '🌧️' },
+    81: { description: 'ливни умеренные', icon: '🌧️' },
+    82: { description: 'ливни сильные', icon: '⛈️' },
+    85: { description: 'снегопад слабый', icon: '❄️' },
+    86: { description: 'снегопад сильный', icon: '❄️' },
+    95: { description: 'гроза', icon: '⛈️' },
+    96: { description: 'гроза с градом', icon: '⛈️' },
+    99: { description: 'сильная гроза с градом', icon: '⛈️' }
+};
+
 function getWeatherByCode(code) {
-    return weatherCodes[code] || { description: 'неизвестно', icon: '🌡️', condition: 'clear' };
+    return hourlyWeatherCodes[code] || { description: 'неизвестно', icon: '🌡️' };
 }
 
 /**
