@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
     // Base path — для деплоя на Vercel в корень домена
@@ -33,5 +34,12 @@ export default defineConfig({
     },
 
     // Плагины
-    plugins: []
+    plugins: [
+        viteStaticCopy({
+            targets: [
+                { src: 'favicon.ico', dest: '.' },
+                { src: 'icons/*', dest: 'icons' }
+            ]
+        })
+    ]
 });
