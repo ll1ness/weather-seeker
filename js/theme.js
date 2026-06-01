@@ -18,9 +18,9 @@ export const THEMES = {
  */
 export function getThemePreference() {
     try {
-        return localStorage.getItem(STORAGE_KEY) || THEMES.AUTO;
+        return localStorage.getItem(STORAGE_KEY) || THEMES.DARK;
     } catch (e) {
-        return THEMES.AUTO;
+        return THEMES.DARK;
     }
 }
 
