@@ -7,6 +7,7 @@ import { renderCharts, hideCharts } from './charts.js';
 import { THEMES, getThemePreference, setThemePreference, shouldUseDarkMode, applyTheme, initTheme, listenForSystemTheme } from './theme.js';
 import { initRadar, playRadarAnimation, pauseRadarAnimation, updateRadarPosition, updateRadarTheme, destroyRadar } from './radar.js';
 import { renderMoonSection, initMoonCalendar } from './moon.js';
+import { shareWeather, getShareFallbackHTML } from './shareWeather.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -977,3 +978,56 @@ window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     console.log('[PWA] App installed successfully');
 });
+
+// ─── Share Weather ───────────────────────────────────────────
+const shareBtn = document.getElementById('shareBtn');
+if (shareBtn) {
+    shareBtn.addEventListener('click', async () => {
+        if (!forecastData || !currentCity) {
+            showToast('⚠️ Сначала загрузите погоду');
+            return;
+        }
+        const result = await shareWeather(forecastData, currentCity);
+        if (result === 'shared') {
+            showToast('✅ Погода отправлена');
+        } else if (result === 'copied') {
+            showToast('📋 Текст скопирован в буфер');
+        } else if (result === 'fallback') {
+            // Показываем модалку с текстом для ручного копирования
+            const overlay = document.getElementById('modalOverlay');
+            const details = document.getElementById('modalDetails');
+            const header = document.querySelector('.modal-header');
+            if (overlay && details && header) {
+                header.innerHTML = '<div class="modal-date">📤 Поделиться погодой</div>';
+                details.innerHTML = getShareFallbackHTML(forecastData, currentCity);
+                overlay.classList.add('active');
+            }
+        }
+    });
+}
+
+/**
+ * Показывает toast-уведомление внизу экрана.
+ * @param {string} message — текст уведомления
+ */
+function showToast(message) {
+    // Удаляем старый toast, если есть
+    const old = document.querySelector('.share-toast');
+    if (old) old.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'share-toast';
+    toast.innerHTML = `<span class="material-icons">info</span> ${message}`;
+    document.body.appendChild(toast);
+
+    // Анимация появления
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Авто-скрытие через 2.5 секунды
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 2500);
+}

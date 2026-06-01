@@ -27,7 +27,8 @@ const PRECACHE_URLS = [
   '/js/charts.js',
   '/js/hourlyForecast.js',
   '/js/radar.js',
-  '/js/moon.js'
+  '/js/moon.js',
+  '/js/shareWeather.js'
 ];
 
 // ─── CDN / external resources to cache ───────────────────────
