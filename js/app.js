@@ -8,6 +8,7 @@ import { THEMES, getThemePreference, setThemePreference, shouldUseDarkMode, appl
 import { initRadar, playRadarAnimation, pauseRadarAnimation, updateRadarPosition, updateRadarTheme, destroyRadar } from './radar.js';
 import { renderMoonSection, initMoonCalendar } from './moon.js';
 import { shareWeather, getShareFallbackHTML } from './shareWeather.js';
+import { initNotificationControls, checkDailyNotification, checkWeatherChange, updateNotificationUI } from './notifications.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -176,6 +177,10 @@ async function loadWeather(lat, lon, cityName = null) {
         // Initialize radar with current position (lazy init when section is opened)
         // Store coordinates for radar use
         window.__radarCoords = { lat, lon };
+
+        // Check notifications
+        checkDailyNotification(data, currentCity);
+        checkWeatherChange(data, currentCity);
         
         // Switch to current section
         switchSection('current');
@@ -1031,3 +1036,6 @@ function showToast(message) {
         setTimeout(() => toast.remove(), 400);
     }, 2500);
 }
+
+// ─── Weather Notifications ───────────────────────────────────
+initNotificationControls();
