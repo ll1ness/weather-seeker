@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script>
         // Immediate check for file:// protocol - redirect to main site
         if (location.protocol === 'file:') {
@@ -226,6 +227,36 @@
                     </div>
                     <div class="loading" id="forecastLoading" style="display: none;">Загрузка прогноза...</div>
                     <div class="forecast-container" id="forecastContainer"></div>
+                    <!-- Charts Section -->
+                    <div class="charts-section" id="chartsSection" style="display: none;">
+                        <h4 class="charts-title">📊 Графики погоды</h4>
+                        <div class="charts-grid">
+                            <div class="chart-card">
+                                <p class="chart-label">Температура (°C)</p>
+                                <div class="chart-wrapper">
+                                    <canvas id="tempChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-card">
+                                <p class="chart-label">Осадки (мм)</p>
+                                <div class="chart-wrapper">
+                                    <canvas id="precipChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-card">
+                                <p class="chart-label">Скорость ветра (км/ч)</p>
+                                <div class="chart-wrapper">
+                                    <canvas id="windChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-card">
+                                <p class="chart-label">Давление (мм рт.ст.)</p>
+                                <div class="chart-wrapper">
+                                    <canvas id="pressureChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Info Section -->

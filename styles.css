@@ -1904,6 +1904,73 @@ body.light-bg .toggle-switch input:focus + .toggle-slider {
     }
 }
 
+/* Charts Section */
+.charts-section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.charts-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    opacity: 0.9;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.chart-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 18px;
+    transition: var(--transition);
+}
+
+.chart-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.chart-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-bottom: 12px;
+}
+
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 180px;
+}
+
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .chart-wrapper {
+        height: 160px;
+    }
+
+    .chart-card {
+        padding: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-wrapper {
+        height: 140px;
+    }
+}
+
 /* Mobile forecast card adjustments (hover removed) */
 @media (max-width: 768px) {
     .forecast-card .details {

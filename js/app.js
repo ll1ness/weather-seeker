@@ -3,6 +3,7 @@ import { displayCurrentWeather, displayForecast, showLoading } from './ui.js';
 import { startAnimation } from './animations.js';
 import { getHistory, addToHistory, clearHistory, formatTimestamp } from './searchHistory.js';
 import { getFavorites, isFavorite, toggleFavorite, removeFavorite } from './favorites.js';
+import { renderCharts, hideCharts } from './charts.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -76,6 +77,10 @@ async function loadWeather(lat, lon, cityName = null) {
         displayCurrentWeather(data, currentCity);
         updateFavoriteButton();
         displayForecast(5, data);
+        // Render charts with daily data
+        if (data.daily) {
+            renderCharts(data.daily, 5);
+        }
         
         // Update forecast city name
         updateForecastCity();
@@ -493,6 +498,9 @@ forecastButtons.forEach(btn => {
         const days = parseInt(btn.dataset.days);
         if (forecastData) {
             displayForecast(days, forecastData);
+            if (forecastData.daily) {
+                renderCharts(forecastData.daily, days);
+            }
         }
     });
 });
