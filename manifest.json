@@ -1,7 +1,7 @@
 {
   "name": "Weather Seeker",
   "short_name": "Weather",
-  "description": "Прогноз погоды с красивым Liquid Glass дизайном, радаром, картами и лунным календарём",
+  "description": "Современное веб-приложение для просмотра прогноза погоды с Liquid Glass дизайном, интерактивным радаром, графиками, сравнением городов и лунным календарём. Бесплатно, без API-ключей.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -31,7 +31,14 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "label": "Weather Seeker — главный экран"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Текущая погода",
@@ -50,6 +57,18 @@
       "short_name": "Радар",
       "description": "Открыть погодный радар",
       "url": "/#radar"
+    },
+    {
+      "name": "Сравнение городов",
+      "short_name": "Сравнение",
+      "description": "Сравнить погоду в двух городах",
+      "url": "/#compare"
+    },
+    {
+      "name": "Лунный календарь",
+      "short_name": "Луна",
+      "description": "Фазы луны и лунный календарь",
+      "url": "/#moon"
     }
   ]
 }

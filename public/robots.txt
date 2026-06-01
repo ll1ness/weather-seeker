@@ -1,0 +1,12 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://weather-seeker.vercel.app/sitemap.xml
+
+# Disallow API paths (none exist, but keep for future)
+# Disallow: /api/
+
+# Crawl delay for polite crawling
+Crawl-delay: 10

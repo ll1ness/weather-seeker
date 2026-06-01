@@ -3,13 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Seeker</title>
+
+    <!-- Primary Meta Tags -->
+    <title>Weather Seeker — Прогноз погоды с радаром, картами и лунным календарём</title>
+    <meta name="title" content="Weather Seeker — Прогноз погоды с радаром, картами и лунным календарём">
+    <meta name="description" content="Weather Seeker — современное веб-приложение для просмотра прогноза погоды с Liquid Glass дизайном, интерактивным радаром, графиками, сравнением городов и лунным календарём. Бесплатно, без API-ключей.">
+    <meta name="keywords" content="погода, прогноз погоды, радар погоды, лунный календарь, погодный радар, weather, forecast, Open-Meteo, PWA">
+    <meta name="author" content="ll1ness">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="ru">
+    <meta name="application-name" content="Weather Seeker">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://weather-seeker.vercel.app/">
+
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a1a2e">
+
+    <!-- iOS PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Weather Seeker">
     <link rel="apple-touch-icon" href="/icons/icon.svg">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://weather-seeker.vercel.app/">
+    <meta property="og:title" content="Weather Seeker — Прогноз погоды с радаром, картами и лунным календарём">
+    <meta property="og:description" content="Современное веб-приложение для просмотра прогноза погоды с Liquid Glass дизайном, интерактивным радаром, графиками, сравнением городов и лунным календарём.">
+    <meta property="og:image" content="https://weather-seeker.vercel.app/icons/icon-512.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Weather Seeker">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://weather-seeker.vercel.app/">
+    <meta name="twitter:title" content="Weather Seeker — Прогноз погоды с радаром, картами и лунным календарём">
+    <meta name="twitter:description" content="Современное веб-приложение для просмотра прогноза погоды с Liquid Glass дизайном, интерактивным радаром, графиками, сравнением городов и лунным календарём.">
+    <meta name="twitter:image" content="https://weather-seeker.vercel.app/icons/icon-512.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Weather Seeker",
+        "url": "https://weather-seeker.vercel.app/",
+        "description": "Современное веб-приложение для просмотра прогноза погоды с Liquid Glass дизайном, интерактивным радаром, графиками, сравнением городов и лунным календарём.",
+        "applicationCategory": "WeatherApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "ll1ness"
+        }
+    }
+    </script>
+
+    <!-- Styles & Fonts -->
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +80,7 @@
     <script>
         // Immediate check for file:// protocol - redirect to main site
         if (location.protocol === 'file:') {
-            window.location.href = 'https://ll1ness.zapto.org/';
+            window.location.href = 'https://weather-seeker.vercel.app/';
         }
     </script>
 </head>
