@@ -60,7 +60,6 @@ window.startAnimationLogic = startAnimation;
 
 // Theme system
 let currentThemePref = initTheme();
-updateThemeButtons(currentThemePref);
 
 // Listen for system theme changes
 const unsubscribeSystemTheme = listenForSystemTheme((isDark) => {
@@ -72,6 +71,9 @@ const unsubscribeSystemTheme = listenForSystemTheme((isDark) => {
 const themeDark = document.getElementById('themeDark');
 const themeLight = document.getElementById('themeLight');
 const themeAuto = document.getElementById('themeAuto');
+
+// Initialize theme button active state after DOM elements are available
+updateThemeButtons(currentThemePref);
 
 if (themeDark) {
     themeDark.addEventListener('click', () => {
