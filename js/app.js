@@ -1,6 +1,7 @@
 import { fetchWeatherByCoords, searchCity } from './weatherApi.js';
 import { displayCurrentWeather, displayForecast, showLoading } from './ui.js';
 import { startAnimation } from './animations.js';
+import { getHistory, addToHistory, clearHistory, formatTimestamp } from './searchHistory.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -99,6 +100,8 @@ async function handleSearch() {
             }
             // Keep the city name in input after search
             cityInput.value = currentCity;
+            // Save to search history
+            addToHistory(currentCity, currentLat, currentLon);
             await loadWeather(currentLat, currentLon, currentCity);
         } catch (error) {
             console.error('Error searching city:', error);
@@ -271,7 +274,12 @@ cityInput.addEventListener('input', () => {
     clearTimeout(debounceTimer);
     const query = cityInput.value.trim();
     if (query.length < 2) {
-        hideSuggestions();
+        // Show history when input is empty or too short
+        if (query.length === 0) {
+            showSearchHistory();
+        } else {
+            hideSuggestions();
+        }
         return;
     }
     debounceTimer = setTimeout(fetchSuggestions, 300, query);
@@ -322,8 +330,61 @@ function handleSearchWithCoords(lat, lon, city) {
     currentLat = lat;
     currentLon = lon;
     currentCity = city;
+    // Save to search history
+    addToHistory(city, lat, lon);
     loadWeather(lat, lon, city);
 }
+
+// Show search history in the suggestions dropdown
+function showSearchHistory() {
+    const history = getHistory();
+    if (history.length === 0) {
+        hideSuggestions();
+        return;
+    }
+
+    suggestionsDropdown.innerHTML = `
+        <div class="history-header">
+            <span class="history-title">📜 История поиска</span>
+            <button class="history-clear" id="clearHistoryBtn">Очистить</button>
+        </div>
+        ${history.map((item, index) => `
+            <div class="suggestion-item history-item" data-lat="${item.lat}" data-lon="${item.lon}" data-name="${item.name}">
+                <span class="history-icon material-icons">history</span>
+                <span class="name">${item.name}</span>
+                <span class="history-time">${formatTimestamp(item.timestamp)}</span>
+            </div>
+        `).join('')}
+    `;
+
+    suggestionsDropdown.classList.add('active');
+
+    // Add click listeners for history items
+    suggestionsDropdown.querySelectorAll('.history-item').forEach(item => {
+        item.addEventListener('click', () => {
+            cityInput.value = item.dataset.name;
+            hideSuggestions();
+            handleSearchWithCoords(parseFloat(item.dataset.lat), parseFloat(item.dataset.lon), item.dataset.name);
+        });
+    });
+
+    // Clear history button
+    const clearBtn = document.getElementById('clearHistoryBtn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearHistory();
+            hideSuggestions();
+        });
+    }
+}
+
+// Show history on focus (if input is empty)
+cityInput.addEventListener('focus', () => {
+    if (cityInput.value.trim().length === 0) {
+        showSearchHistory();
+    }
+});
 
 // Close suggestions when clicking outside
 document.addEventListener('click', (e) => {
