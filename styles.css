@@ -1047,17 +1047,125 @@ body.light-theme .menu-toggle {
     border-radius: 20px;
 }
 
-.loading {
-    text-align: center;
-    font-size: 1.4rem;
-    padding: 60px;
-    animation: pulse 1.5s ease-in-out infinite;
-    color: var(--text-secondary);
+/* Skeleton Screen Styles */
+.skeleton {
+    display: block;
+    padding: 20px 0;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+.skeleton-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 20px;
+}
+
+.skeleton-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.skeleton-description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 18px;
+    margin-bottom: 24px;
+}
+
+.skeleton-hourly {
+    margin-bottom: 24px;
+}
+
+.skeleton-hourly-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.skeleton-mini-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+
+.skeleton-block {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-block::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+.skeleton-city {
+    width: 200px;
+    height: 32px;
+    border-radius: 8px;
+}
+
+.skeleton-temp {
+    width: 120px;
+    height: 60px;
+    border-radius: 8px;
+}
+
+.skeleton-detail-item {
+    height: 80px;
+}
+
+.skeleton-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.skeleton-text-short {
+    width: 140px;
+    height: 20px;
+    border-radius: 6px;
+}
+
+.skeleton-hourly-title {
+    width: 180px;
+    height: 20px;
+    border-radius: 6px;
+}
+
+.skeleton-hourly-card {
+    flex: 0 0 90px;
+    height: 120px;
+}
+
+.skeleton-mini-card {
+    height: 60px;
+}
+
+@keyframes skeleton-shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Light theme skeleton overrides */
+body.light-theme .skeleton-block {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .skeleton-block::after {
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.06), transparent);
 }
 
 .weather-content {

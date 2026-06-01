@@ -369,9 +369,11 @@ function formatDate(date) {
 }
 
 export function showLoading(show) {
-    const loading = document.getElementById('loading');
+    const skeleton = document.getElementById('skeleton');
     const weatherContent = document.getElementById('weatherContent');
-    loading.style.display = show ? 'block' : 'none';
+    if (skeleton) {
+        skeleton.style.display = show ? 'block' : 'none';
+    }
     if (show) {
         weatherContent.style.display = 'none';
     } else {
