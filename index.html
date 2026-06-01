@@ -62,6 +62,10 @@
                     <span class="nav-icon material-icons">radar</span>
                     <span>Радар</span>
                 </button>
+                <button class="nav-item" data-section="moon">
+                    <span class="nav-icon material-icons">dark_mode</span>
+                    <span>Луна</span>
+                </button>
                 <button class="nav-item" data-section="info">
                     <span class="nav-icon material-icons">info</span>
                     <span>Инфо</span>
@@ -632,6 +636,46 @@
                         <span class="legend-item"><span class="legend-color" style="background: #ff8800;"></span>Сильный</span>
                         <span class="legend-item"><span class="legend-color" style="background: #ff0000;"></span>Очень сильный</span>
                         <span class="legend-item"><span class="legend-color" style="background: #ff00ff;"></span>Экстремальный</span>
+                    </div>
+                </section>
+
+                <!-- Moon / Lunar Calendar Section -->
+                <section class="section moon-section" id="moonSection">
+                    <h3>🌙 Фазы Луны</h3>
+                    <p class="moon-description">Лунный календарь с фазами луны на текущий месяц.</p>
+                    
+                    <div class="moon-today">
+                        <div class="moon-phase-display">
+                            <div class="moon-visual" id="moonVisual">
+                                <canvas id="moonCanvas" width="200" height="200"></canvas>
+                            </div>
+                            <div class="moon-info">
+                                <h4 class="moon-phase-name" id="moonPhaseName">--</h4>
+                                <p class="moon-illumination" id="moonIllumination">--</p>
+                                <p class="moon-age" id="moonAge">--</p>
+                                <p class="moon-next" id="moonNextNew">--</p>
+                                <p class="moon-next" id="moonNextFull">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="moon-calendar">
+                        <h4>📅 Лунный календарь на месяц</h4>
+                        <div class="moon-calendar-header">
+                            <button class="moon-cal-nav" id="moonPrevMonth">
+                                <span class="material-icons">chevron_left</span>
+                            </button>
+                            <span class="moon-cal-month" id="moonCalMonth">--</span>
+                            <button class="moon-cal-nav" id="moonNextMonth">
+                                <span class="material-icons">chevron_right</span>
+                            </button>
+                        </div>
+                        <div class="moon-cal-grid" id="moonCalGrid"></div>
+                    </div>
+
+                    <div class="moon-phases-list">
+                        <h4>📆 Фазы на месяц</h4>
+                        <div class="moon-phases-grid" id="moonPhasesGrid"></div>
                     </div>
                 </section>
             </div>

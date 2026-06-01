@@ -6,6 +6,7 @@ import { getFavorites, isFavorite, toggleFavorite, removeFavorite } from './favo
 import { renderCharts, hideCharts } from './charts.js';
 import { THEMES, getThemePreference, setThemePreference, shouldUseDarkMode, applyTheme, initTheme, listenForSystemTheme } from './theme.js';
 import { initRadar, playRadarAnimation, pauseRadarAnimation, updateRadarPosition, updateRadarTheme, destroyRadar } from './radar.js';
+import { renderMoonSection, initMoonCalendar } from './moon.js';
 
 // Check if running on a server (not file://)
 if (location.protocol === 'file:') {
@@ -54,6 +55,7 @@ const sections = {
     forecast: document.getElementById('forecastSection'),
     compare: document.getElementById('compareSection'),
     radar: document.getElementById('radarSection'),
+    moon: document.getElementById('moonSection'),
     info: document.getElementById('infoSection'),
     facts: document.getElementById('factsSection')
 };
@@ -273,6 +275,12 @@ function switchSection(sectionName) {
             // Default to Moscow if no location selected
             initRadar(55.7558, 37.6173);
         }
+    }
+    
+    // Initialize moon section when switching to it
+    if (sectionName === 'moon') {
+        renderMoonSection();
+        initMoonCalendar();
     }
     
     if (window.innerWidth <= 768) {
