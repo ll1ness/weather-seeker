@@ -1,5 +1,5 @@
 import { fetchWeatherByCoords, searchCity, fetchAirQuality } from './weatherApi.js';
-import { displayCurrentWeather, displayForecast, showLoading } from './ui.js';
+import { displayCurrentWeather, displayForecast, showLoading, displayAirQuality } from './ui.js';
 import { startAnimation } from './animations.js';
 import { getHistory, addToHistory, clearHistory, formatTimestamp } from './searchHistory.js';
 import { getFavorites, isFavorite, toggleFavorite, removeFavorite } from './favorites.js';
@@ -166,10 +166,7 @@ async function loadWeather(lat, lon, cityName = null) {
                 window.__aqiData = aqiData;
                 const aqiEl = document.getElementById('aqiValue');
                 if (aqiEl) {
-                    // Use the displayAirQuality function from ui.js
-                    import('./ui.js').then(({ displayAirQuality }) => {
-                        displayAirQuality(aqiData);
-                    });
+                    displayAirQuality(aqiData);
                 }
             }
         }).catch(err => console.warn('AQI fetch failed:', err));
